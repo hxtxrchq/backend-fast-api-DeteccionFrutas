@@ -3,9 +3,20 @@ from fastapi.responses import JSONResponse
 import shutil
 import os
 from utils.predict import predict_image
+from fastapi.middleware.cors import CORSMiddleware
+
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # O reemplaza "*" con ["https://tudominio.com"] si prefieres restringirlo
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
