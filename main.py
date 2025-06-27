@@ -21,6 +21,11 @@ app.add_middleware(
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
+@app.get("/")
+def root():
+    return {"status": "ok"}
+
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
