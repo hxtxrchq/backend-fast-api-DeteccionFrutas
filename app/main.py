@@ -43,19 +43,17 @@ def preprocess_image(img_bytes):
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    # Leer la imagen subida
-    img_bytes = await file.read()
-    
-    # Preprocesar la imagen
-    img_array = preprocess_image(img_bytes)
-    
-    # Hacer la predicción
-    preds = model.predict(img_array)[0]
-    max_pred = preds.max()
-    
-    # Si la confianza es baja, decir que la fruta es desconocida
-    if max_pred < 0.5:
-        return {"message": "Fruta desconocida", "confidence": max_pred}
-    else:
-        predicted_class = classes[np.argmax(preds)]
-        return {"predicted_class": predicted_class, "confidence": max_pred}
+    try:
+        img_bytes = await file.read()
+        img_array = preprocess_image(img_bytes)
+        preds = model.predict(img_array)[0]
+        max_pred = preds.max()
+
+        if max_pred < 0.5:
+            return {"message": "Fruta desconocida", "confidence": max_pred}
+        else:
+            predicted_class = classes[np.argmax(preds)]
+            return {"predicted_class": predicted_class, "confidence": max_pred}
+    except Exception as e:
+        print(f"Error completo: {e}")
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
