@@ -47,7 +47,7 @@ async def predict(file: UploadFile = File(...)):
         img_bytes = await file.read()
         img_array = preprocess_image(img_bytes)
         preds = model.predict(img_array)[0]
-        max_pred = preds.max()
+        max_pred = float(preds.max())  # Convertir a float
 
         if max_pred < 0.5:
             return {"message": "Fruta desconocida", "confidence": max_pred}
@@ -57,3 +57,4 @@ async def predict(file: UploadFile = File(...)):
     except Exception as e:
         print(f"Error completo: {e}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
+
