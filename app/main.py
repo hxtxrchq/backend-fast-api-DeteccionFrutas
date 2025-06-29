@@ -30,11 +30,16 @@ app.add_middleware(
 
 # Función para preprocesar las imágenes
 def preprocess_image(img_bytes):
-    img = Image.open(io.BytesIO(img_bytes))
-    img = img.resize((150, 150))  # Cambiar tamaño a 150x150
-    img_array = np.array(img) / 255.0  # Normalizar imagen
-    img_array = np.expand_dims(img_array, axis=0)  # Añadir dimensión del batch
-    return img_array
+    try:
+        img = Image.open(io.BytesIO(img_bytes))
+        img = img.resize((150, 150))  # Cambiar tamaño a 150x150
+        img_array = np.array(img) / 255.0  # Normalizar imagen
+        img_array = np.expand_dims(img_array, axis=0)  # Añadir dimensión del batch
+        return img_array
+    except Exception as e:
+        print(f"Error al procesar la imagen: {e}")
+        raise HTTPException(status_code=400, detail="Error al procesar la imagen")
+
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
