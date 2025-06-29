@@ -1,5 +1,5 @@
-# app/main.py
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
@@ -18,6 +18,15 @@ classes = ['freshapples', 'freshbanana', 'rottenbanana', 'rottenapples', 'fresho
 
 # Crear la app FastAPI
 app = FastAPI()
+
+# Agregar middleware de CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite todas las direcciones (ajustar si es necesario)
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos los métodos HTTP
+    allow_headers=["*"],  # Permite todos los encabezados
+)
 
 # Función para preprocesar las imágenes
 def preprocess_image(img_bytes):
