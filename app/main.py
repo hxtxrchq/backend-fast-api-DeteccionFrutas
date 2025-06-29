@@ -27,7 +27,7 @@ def preprocess_image(img_bytes):
     img_array = np.expand_dims(img_array, axis=0)  # Añadir dimensión del batch
     return img_array
 
-@app.post("/predict/")
+@app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     # Leer la imagen subida
     img_bytes = await file.read()
